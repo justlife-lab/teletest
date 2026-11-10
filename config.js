@@ -8,7 +8,7 @@ const CONFIG = {
   //    Google Sheet. In the sheet: Extensions → Apps Script → Deploy →
   //    New deployment → Web app (Execute as: Me · Who has access: Anyone) →
   //    copy the URL that ends in /exec.
-  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/PASTE_YOUR_DEPLOYMENT_ID/exec',
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxx_unej1s4RHyjIBcpBq3htyf1NMa5VQZTDMulsF7N7tffRFbq0mbBETKoqQ0VuQ/exec',
 
   // 2) Your Google OAuth "Web application" client ID (…apps.googleusercontent.com).
   //    Must be identical to GOOGLE_CLIENT_ID in the Settings tab of the spreadsheet.
@@ -18,7 +18,7 @@ const CONFIG = {
   // 3) Your Google Sheet link (the database). Used for the "Open Google Sheet"
   //    button in the staff portal. The data itself is reached through the
   //    Apps Script above, which lives inside this sheet.
-  GOOGLE_SHEET_URL: 'https://docs.google.com/spreadsheets/d/PASTE_YOUR_SHEET_ID/edit',
+  GOOGLE_SHEET_URL: 'https://docs.google.com/spreadsheets/d/1YUc5CCZ171OjHboOXdJVnmuphP0BZlJGzEtqoEOZV-Y/edit',
 
   // 4) Only Google accounts on this domain can sign in to the staff portal
   //    (checked again on the server — Settings ▸ ALLOWED_DOMAIN).
