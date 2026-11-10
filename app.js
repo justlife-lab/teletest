@@ -1,7 +1,8 @@
 /* =============================================================================
  * Justlife Teleconsultation — website logic (no build step, no frameworks)
- *   index.html   (data-page="client")  booking, reschedule & cancel
- *   partner.html (data-page="staff")   admin & doctor portal (Google sign-in)
+ *   index.html?t=… / ?r=…   client booking, reschedule & cancel
+ *   index.html (no link)    ADMIN sign-in & admin portal (Google, @justlife.com)
+ *   doctor.html             DOCTOR sign-in & doctor portal (Google, @justlife.com)
  * All data goes through the Apps Script web app (CONFIG.APPS_SCRIPT_URL).
  * ========================================================================== */
 (function () {
@@ -107,6 +108,13 @@
     const qs = new URLSearchParams(location.search);
     C.t = qs.get('t') || '';
     C.r = qs.get('r') || '';
+    if (!C.t && !C.r) { // no client link → this is the admin entrance
+      document.body.dataset.portal = 'admin';
+      app.classList.add('wide');
+      $('#footer').classList.add('hidden');
+      $('#tag').textContent = 'Admin portal';
+      return staffInit();
+    }
     try {
       const d = await api('init', { t: C.t, r: C.r });
       C.settings = d.settings;
@@ -347,10 +355,11 @@
   }
 
   // ===========================================================================
-  // STAFF PORTAL (partner.html)
+  // STAFF PORTALS — admin (index.html without a link) and doctor (doctor.html)
   // ===========================================================================
   const S = { auth: null, me: null, view: '', cache: {} };
   const AUTH_KEY = 'jl_staff_auth';
+  const portal = () => (document.body.dataset.portal === 'doctor' ? 'doctor' : 'admin');
 
   const sapi = async (action, data) => {
     try { return await api(action, data, S.auth); } catch (e) {
@@ -382,7 +391,7 @@
     try { settings = (await api('init', {})).settings; } catch (e) { app.innerHTML = `<div class="notice error">${esc(e.message)}</div>`; return; }
     const domain = settings.allowedDomain || CONFIG.ALLOWED_DOMAIN;
     app.innerHTML = `<div class="card login">
-      <h1>Staff sign in</h1><p class="muted">Admins, CX and doctors — use your <b>@${esc(domain)}</b> ${settings.authMode === 'test' ? 'email' : 'Google account'}.</p>
+      <h1>${portal() === 'doctor' ? 'Doctor sign in' : 'Admin sign in'}</h1><p class="muted">Use your <b>@${esc(domain)}</b> ${settings.authMode === 'test' ? 'email' : 'Google account'}.</p>
       ${message ? `<div class="notice error" style="margin:12px 0">${esc(message)}</div>` : ''}
       ${settings.authMode === 'test' ? `
         <form id="testlogin" class="stack" style="text-align:left;margin-top:16px">
@@ -391,6 +400,7 @@
           <label class="field"><span class="label">Test password</span><input class="input" name="password" type="password" required></label>
           <button class="btn btn-primary btn-block">Sign in</button></form>`
     : `<div id="gbtn"></div><p class="small muted" id="gsi-msg"></p>`}
+      <p class="small muted" style="margin-top:18px">${portal() === 'doctor' ? 'Admin or CX? <a href="./">Admin sign in</a>' : 'Doctor? <a href="doctor.html">Doctor sign in</a>'}</p>
     </div>`;
     if (settings.authMode === 'test') {
       $('#testlogin').onsubmit = async (e) => {
@@ -447,6 +457,17 @@
 
   function startPortal() {
     const u = S.me.user;
+    // Right person, right door: doctors use doctor.html, admins use the home page.
+    const want = portal() === 'doctor' ? 'DOCTOR' : 'ADMIN';
+    if (u.role !== want) {
+      const other = u.role === 'DOCTOR' ? 'doctor.html' : './';
+      $('#userbox').innerHTML = '<button class="btn btn-sm" id="signout">Sign out</button>';
+      $('#signout').onclick = () => signOut();
+      app.innerHTML = `<div class="card login"><h1>${u.role === 'DOCTOR' ? 'You are a doctor' : 'You are an admin'}</h1>
+        <p class="muted">${esc(u.email)} signs in on the ${u.role === 'DOCTOR' ? 'doctor' : 'admin'} page.</p>
+        <a class="btn btn-primary btn-block" href="${other}">Open the ${u.role === 'DOCTOR' ? 'doctor' : 'admin'} portal</a></div>`;
+      return;
+    }
     $('#userbox').innerHTML = `<div class="user-chip"><b>${esc(u.name)}</b>${esc(u.email)} · ${u.role === 'ADMIN' ? 'Admin' : 'Doctor'}</div>
       ${isAdmin() && CONFIG.GOOGLE_SHEET_URL && !/PASTE/.test(CONFIG.GOOGLE_SHEET_URL) ? `<a class="btn btn-sm" href="${esc(CONFIG.GOOGLE_SHEET_URL)}" target="_blank" rel="noopener">Open Google Sheet</a>` : ''}
       <button class="btn btn-sm" id="signout">Sign out</button>`;

@@ -5,17 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex, nofollow">
-  <title>Book a Teleconsultation · Justlife Healthcare</title>
+  <title>Justlife Teleconsultation</title>
   <link rel="icon" href="favicon.png">
   <link rel="stylesheet" href="style.css">
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body data-page="client">
+  <!-- index.html: with ?t=… (booking link) or ?r=… (reschedule link) → client booking.
+       Without a link → Admin sign-in & admin portal. Doctors use doctor.html. -->
   <header class="topbar">
     <a class="brand" href="./"><img src="logo.png" alt="" onerror="this.outerHTML='<span class=dot>J</span>'"><span>Justlife Healthcare</span></a>
-    <span class="tag">Teleconsultation</span>
+    <span class="tag" id="tag">Teleconsultation</span>
+    <span class="spacer"></span>
+    <div id="userbox" class="row"></div>
   </header>
+  <nav id="nav" class="nav hidden"></nav>
   <main id="app" class="container"><div class="spinner" role="status" aria-label="Loading"></div></main>
-  <footer class="site">
+  <footer class="site" id="footer">
     <span id="support"></span> · <a href="privacy.html">Privacy</a>
   </footer>
   <div id="toast" aria-live="polite"></div>
