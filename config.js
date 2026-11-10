@@ -8,7 +8,7 @@ const CONFIG = {
   //    Google Sheet. In the sheet: Extensions → Apps Script → Deploy →
   //    New deployment → Web app (Execute as: Me · Who has access: Anyone) →
   //    copy the URL that ends in /exec.
-  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbxx_unej1s4RHyjIBcpBq3htyf1NMa5VQZTDMulsF7N7tffRFbq0mbBETKoqQ0VuQ/exec',
+  APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbwt5GOH-_VszKVgBJ6IVRgFoJvRzC0BVSpfTxGbR1wiBHLZJ43GGIG7JeaUQYD07bw/exec',
 
   // 2) Your Google OAuth "Web application" client ID (…apps.googleusercontent.com).
   //    Must be identical to GOOGLE_CLIENT_ID in the Settings tab of the spreadsheet.
